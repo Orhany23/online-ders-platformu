@@ -2,13 +2,6 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -43,7 +36,6 @@ export default async function DashboardPage() {
     }),
   ]);
 
-  // Get progress for each course
   const progressMap = new Map<string, number>();
   for (const enrollment of enrollments) {
     const total = enrollment.course._count.lessons;
@@ -62,28 +54,31 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-12">
-      <div className="mb-10">
-        <h1 className="text-3xl font-bold">Öğrenme Paneli</h1>
-        <p className="text-muted-foreground mt-1">
+    <div className="max-w-5xl mx-auto px-4 py-16">
+      <div className="mb-12">
+        <h1 className="text-3xl font-bold mb-1">
+          Öğrenme <span className="gradient-text">Paneli</span>
+        </h1>
+        <p className="text-muted-foreground">
           Merhaba, {session.user.name ?? "Öğrenci"}
         </p>
       </div>
 
-      {/* Enrolled Courses */}
       <section className="mb-12">
-        <h2 className="text-xl font-bold mb-4">Kurslarım</h2>
+        <h2 className="text-xl font-bold mb-6">Kurslarım</h2>
         {enrollments.length === 0 ? (
-          <Card>
-            <CardContent className="text-center py-16">
-              <p className="text-xl text-muted-foreground mb-4">
-                Henüz bir kursa kaydolmadın
-              </p>
-              <Button asChild>
-                <Link href="/courses">Kursları Keşfet</Link>
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="glass rounded-2xl border border-border/50 p-16 text-center shadow-soft">
+            <div className="text-5xl mb-4 text-muted-foreground/30">✦</div>
+            <p className="text-lg text-muted-foreground mb-6">
+              Henüz bir kursa kaydolmadın
+            </p>
+            <Link
+              href="/courses"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground px-6 py-2.5 text-sm font-medium shadow-soft transition-all hover:shadow-soft-lg hover:translate-y-[-1px]"
+            >
+              Kursları Keşfet
+            </Link>
+          </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {enrollments.map((enrollment) => {
@@ -91,60 +86,73 @@ export default async function DashboardPage() {
               const firstLesson = enrollment.course.lessons[0];
 
               return (
-                <Card key={enrollment.id}>
-                  <CardHeader>
-                    <div className="aspect-video bg-muted rounded-lg mb-3 flex items-center justify-center text-4xl">
-                      🎬
+                <div
+                  key={enrollment.id}
+                  className="glass rounded-2xl border border-border/50 overflow-hidden shadow-soft transition-all hover:shadow-soft-lg hover:translate-y-[-2px]"
+                >
+                  <div className="aspect-video bg-gradient-to-br from-violet-600/20 via-primary/5 to-rose-600/20 flex items-center justify-center">
+                    <div className="text-4xl opacity-30 select-none">✦</div>
+                  </div>
+                  <div className="p-5 space-y-4">
+                    <div>
+                      <h3 className="font-bold text-lg leading-tight">
+                        {enrollment.course.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {enrollment.course.instructor.name ?? "Eğitmen"}
+                      </p>
                     </div>
-                    <CardTitle className="text-lg">
-                      {enrollment.course.title}
-                    </CardTitle>
-                    <p className="text-sm text-muted-foreground">
-                      {enrollment.course.instructor.name ?? "Eğitmen"}
-                    </p>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span>İlerleme</span>
-                        <span className="font-medium">{progress}%</span>
+                        <span className="text-muted-foreground">İlerleme</span>
+                        <span className="font-semibold">{progress}%</span>
                       </div>
-                      <div className="w-full bg-muted rounded-full h-2">
+                      <div className="w-full bg-muted/50 rounded-full h-2">
                         <div
-                          className="bg-primary h-2 rounded-full transition-all"
-                          style={{ width: `${progress}%` }}
+                          className="h-2 rounded-full transition-all duration-500"
+                          style={{
+                            width: `${progress}%`,
+                            background:
+                              "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--rose-500, var(--primary))))",
+                          }}
                         />
                       </div>
                     </div>
                     {firstLesson && (
-                      <Button className="w-full" asChild>
-                        <Link
-                          href={`/learn/${enrollment.courseId}/${firstLesson.id}`}
-                        >
-                          Devam Et
-                        </Link>
-                      </Button>
+                      <Link
+                        href={`/learn/${enrollment.courseId}/${firstLesson.id}`}
+                        className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground px-4 py-2 text-sm font-medium shadow-soft transition-all hover:shadow-soft-lg hover:translate-y-[-1px]"
+                      >
+                        Devam Et
+                      </Link>
                     )}
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               );
             })}
           </div>
         )}
       </section>
 
-      {/* Upcoming Live Sessions */}
       {liveSessions.length > 0 && (
         <section>
-          <h2 className="text-xl font-bold mb-4">Yaklaşan Canlı Dersler</h2>
+          <h2 className="text-xl font-bold mb-6">Yaklaşan Canlı Dersler</h2>
           <div className="space-y-3">
             {liveSessions.map((ls) => (
-              <Card key={ls.id}>
-                <CardContent className="flex items-center justify-between p-4">
+              <div
+                key={ls.id}
+                className="flex items-center justify-between p-4 rounded-xl glass border border-border/50 shadow-soft transition-all hover:shadow-soft-lg"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-rose-500 flex items-center justify-center text-white shadow-soft">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
+                    </svg>
+                  </div>
                   <div>
                     <p className="font-medium">{ls.title}</p>
                     <p className="text-sm text-muted-foreground">
-                      {ls.course.title} —{" "}
+                      {ls.course.title} &mdash;{" "}
                       {new Date(ls.date).toLocaleDateString("tr-TR", {
                         day: "numeric",
                         month: "long",
@@ -154,19 +162,18 @@ export default async function DashboardPage() {
                       })}
                     </p>
                   </div>
-                  {ls.meetingLink && (
-                    <Button variant="outline" size="sm" asChild>
-                      <a
-                        href={ls.meetingLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Katıl
-                      </a>
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
+                </div>
+                {ls.meetingLink && (
+                  <a
+                    href={ls.meetingLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-input bg-background px-4 py-2 text-sm font-medium shadow-soft transition-all hover:shadow-soft-lg hover:translate-y-[-1px]"
+                  >
+                    Katıl
+                  </a>
+                )}
+              </div>
             ))}
           </div>
         </section>

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { auth, signIn, signOut } from "@/lib/auth";
+import { auth } from "@/lib/auth";
+import { LogoutButton } from "@/components/logout-button";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,73 +17,70 @@ export async function Navbar() {
   const user = session?.user;
 
   return (
-    <header className="border-b">
+    <header className="sticky top-0 z-50 glass">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="font-bold text-xl">
-          🎓 Fiberan
+        <Link href="/" className="font-bold text-xl flex items-center gap-2">
+          <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-primary-foreground text-sm font-bold">
+            F
+          </span>
+          <span className="hidden sm:inline">Fiberan</span>
         </Link>
 
-        <nav className="flex items-center gap-4">
-          <Link href="/courses" className="text-sm hover:text-primary">
-            Kurslar
-          </Link>
+        <nav className="flex items-center gap-1 sm:gap-2">
+          <Button variant="ghost" size="sm" asChild>
+            <Link href="/courses">Kurslar</Link>
+          </Button>
 
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-                  <Avatar className="h-9 w-9">
+                <Button variant="ghost" className="relative h-9 w-9 rounded-full ml-2">
+                  <Avatar className="h-9 w-9 ring-2 ring-primary/20">
                     <AvatarImage src={user.image ?? ""} />
-                    <AvatarFallback>
+                    <AvatarFallback className="bg-primary/10 text-primary text-sm font-medium">
                       {user.name?.charAt(0)?.toUpperCase() ?? "U"}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end">
-                <DropdownMenuLabel>
-                  {user.name ?? user.email}
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col gap-1">
+                    <p className="font-medium text-sm">{user.name ?? "Kullanıcı"}</p>
+                    <p className="text-xs text-muted-foreground font-normal">{user.email}</p>
+                  </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/dashboard">Öğrenme Paneli</Link>
+                  <Link href="/dashboard">✦ Öğrenme Paneli</Link>
                 </DropdownMenuItem>
                 {user.role === "INSTRUCTOR" && (
                   <>
                     <DropdownMenuItem asChild>
-                      <Link href="/instructor/courses">Kurslarım</Link>
+                      <Link href="/instructor/courses">✦ Kurslarım</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/instructor/analytics">Analizler</Link>
+                      <Link href="/instructor/analytics">✦ Analizler</Link>
                     </DropdownMenuItem>
                   </>
                 )}
                 {user.role === "ADMIN" && (
                   <>
                     <DropdownMenuItem asChild>
-                      <Link href="/admin">Admin Panel</Link>
+                      <Link href="/admin">✦ Admin Panel</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/admin/courses">Kurs Yönetimi</Link>
+                      <Link href="/admin/courses">✦ Kurs Yönetimi</Link>
                     </DropdownMenuItem>
                   </>
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/profile">Profil</Link>
+                  <Link href="/profile">✦ Profil</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <form
-                    action={async () => {
-                      "use server";
-                      await signOut();
-                    }}
-                  >
-                    <button type="submit" className="w-full text-left">
-                      Çıkış Yap
-                    </button>
-                  </form>
+                  <LogoutButton />
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

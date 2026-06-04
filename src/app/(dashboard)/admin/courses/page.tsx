@@ -2,23 +2,6 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 
 export default async function AdminCoursesPage({
   searchParams,
@@ -46,105 +29,94 @@ export default async function AdminCoursesPage({
     ]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-8">Kurs Yönetimi</h1>
+    <div className="max-w-6xl mx-auto px-4 py-16">
+      <h1 className="text-3xl font-bold mb-10">
+        Kurs <span className="gradient-text">Yönetimi</span>
+      </h1>
 
       <div className="grid md:grid-cols-3 gap-6 mb-10">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold">
-              {totalCourses}
-            </CardTitle>
-            <p className="text-sm text-muted-foreground">Toplam Kurs</p>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold">
-              {publishedCourses}
-            </CardTitle>
-            <p className="text-sm text-muted-foreground">Yayındaki Kurs</p>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold">
-              {totalEnrollments}
-            </CardTitle>
-            <p className="text-sm text-muted-foreground">Toplam Kayıt</p>
-          </CardHeader>
-        </Card>
+        <div className="glass rounded-2xl border border-border/50 p-6 shadow-soft">
+          <p className="text-4xl font-bold gradient-text">{totalCourses}</p>
+          <p className="text-sm text-muted-foreground mt-1">Toplam Kurs</p>
+        </div>
+        <div className="glass rounded-2xl border border-border/50 p-6 shadow-soft">
+          <p className="text-4xl font-bold gradient-text">{publishedCourses}</p>
+          <p className="text-sm text-muted-foreground mt-1">Yayındaki Kurs</p>
+        </div>
+        <div className="glass rounded-2xl border border-border/50 p-6 shadow-soft">
+          <p className="text-4xl font-bold gradient-text">{totalEnrollments}</p>
+          <p className="text-sm text-muted-foreground mt-1">Toplam Kayıt</p>
+        </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Tüm Kurslar</CardTitle>
-            <form className="flex gap-2">
-              <Input
-                name="q"
-                placeholder="Kurs ara..."
-                defaultValue={q ?? ""}
-                className="w-64"
-              />
-              <Button type="submit">Ara</Button>
-            </form>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Başlık</TableHead>
-                <TableHead>Eğitmen</TableHead>
-                <TableHead>Ders</TableHead>
-                <TableHead>Öğrenci</TableHead>
-                <TableHead>Durum</TableHead>
-                <TableHead>İşlemler</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+      <div className="glass rounded-2xl border border-border/50 p-6 shadow-soft">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <h2 className="text-lg font-bold">Tüm Kurslar</h2>
+          <form className="relative">
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+            <input
+              name="q"
+              placeholder="Kurs ara..."
+              defaultValue={q ?? ""}
+              className="flex h-10 w-64 rounded-xl border border-input bg-background pl-10 pr-4 py-2 text-sm shadow-soft transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            />
+          </form>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border/50">
+                <th className="text-left font-medium text-muted-foreground py-3 px-3">Başlık</th>
+                <th className="text-left font-medium text-muted-foreground py-3 px-3">Eğitmen</th>
+                <th className="text-left font-medium text-muted-foreground py-3 px-3">Ders</th>
+                <th className="text-left font-medium text-muted-foreground py-3 px-3">Öğrenci</th>
+                <th className="text-left font-medium text-muted-foreground py-3 px-3">Durum</th>
+                <th className="text-left font-medium text-muted-foreground py-3 px-3">İşlemler</th>
+              </tr>
+            </thead>
+            <tbody>
               {courses.map((course) => (
-                <TableRow key={course.id}>
-                  <TableCell className="font-medium">
-                    {course.title}
-                  </TableCell>
-                  <TableCell>
+                <tr key={course.id} className="border-b border-border/25 hover:bg-accent/30 transition-colors">
+                  <td className="font-medium py-3 px-3">{course.title}</td>
+                  <td className="py-3 px-3 text-muted-foreground">
                     {course.instructor.name ?? course.instructor.email}
-                  </TableCell>
-                  <TableCell>{course._count.lessons}</TableCell>
-                  <TableCell>{course._count.enrollments}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={course.published ? "default" : "secondary"}
-                    >
+                  </td>
+                  <td className="py-3 px-3">{course._count.lessons}</td>
+                  <td className="py-3 px-3">{course._count.enrollments}</td>
+                  <td className="py-3 px-3">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+                      course.published
+                        ? "bg-primary/10 text-primary border-primary/20"
+                        : "bg-muted text-muted-foreground border-border"
+                    }`}>
                       {course.published ? "Yayında" : "Taslak"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="outline" size="sm" asChild>
-                      <Link
-                        href={`/instructor/courses/${course.id}/edit`}
-                      >
-                        Düzenle
-                      </Link>
-                    </Button>
-                  </TableCell>
-                </TableRow>
+                    </span>
+                  </td>
+                  <td className="py-3 px-3">
+                    <Link
+                      href={`/instructor/courses/${course.id}/edit`}
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-input bg-background px-3.5 py-1.5 text-xs font-medium shadow-soft transition-all hover:shadow-soft-lg hover:translate-y-[-1px]"
+                    >
+                      Düzenle
+                    </Link>
+                  </td>
+                </tr>
               ))}
               {courses.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8">
+                <tr>
+                  <td colSpan={6} className="text-center py-12 text-muted-foreground">
                     {q
                       ? `"${q}" için sonuç bulunamadı`
                       : "Henüz kurs yok"}
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

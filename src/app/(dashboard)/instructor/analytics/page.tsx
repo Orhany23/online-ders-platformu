@@ -2,22 +2,6 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 
 export default async function InstructorAnalyticsPage() {
   const session = await auth();
@@ -46,103 +30,89 @@ export default async function InstructorAnalyticsPage() {
   );
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-12">
-      <div className="flex items-center justify-between mb-10">
+    <div className="max-w-5xl mx-auto px-4 py-16">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-12">
         <div>
-          <h1 className="text-3xl font-bold">Analizler</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-bold">
+            <span className="gradient-text">Analizler</span>
+          </h1>
+          <p className="text-muted-foreground mt-1">
             Kurslarının genel durumu
           </p>
         </div>
-        <Button asChild>
-          <Link href="/instructor/courses/new">Yeni Kurs</Link>
-        </Button>
+        <Link
+          href="/instructor/courses/new"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground px-5 py-2.5 text-sm font-medium shadow-soft transition-all hover:shadow-soft-lg hover:translate-y-[-1px] active:scale-[0.98] flex-shrink-0"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          Yeni Kurs
+        </Link>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6 mb-10">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold">
-              {totalCourses}
-            </CardTitle>
-            <p className="text-sm text-muted-foreground">Toplam Kurs</p>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold">
-              {totalLessons}
-            </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Toplam Ders
-            </p>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold">
-              {totalStudents}
-            </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Toplam Öğrenci
-            </p>
-          </CardHeader>
-        </Card>
+      <div className="grid md:grid-cols-3 gap-6 mb-12">
+        <div className="glass rounded-2xl border border-border/50 p-6 shadow-soft">
+          <p className="text-4xl font-bold gradient-text">{totalCourses}</p>
+          <p className="text-sm text-muted-foreground mt-1">Toplam Kurs</p>
+        </div>
+        <div className="glass rounded-2xl border border-border/50 p-6 shadow-soft">
+          <p className="text-4xl font-bold gradient-text">{totalLessons}</p>
+          <p className="text-sm text-muted-foreground mt-1">Toplam Ders</p>
+        </div>
+        <div className="glass rounded-2xl border border-border/50 p-6 shadow-soft">
+          <p className="text-4xl font-bold gradient-text">{totalStudents}</p>
+          <p className="text-sm text-muted-foreground mt-1">Toplam Öğrenci</p>
+        </div>
       </div>
 
       {courses.length === 0 ? (
-        <Card>
-          <CardContent className="text-center py-16">
-            <p className="text-xl text-muted-foreground mb-4">
-              Henüz kurs oluşturmadın
-            </p>
-            <Button asChild>
-              <Link href="/instructor/courses/new">
-                İlk Kursu Oluştur
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
+        <div className="glass rounded-2xl border border-border/50 p-16 text-center shadow-soft">
+          <div className="text-5xl mb-4 text-muted-foreground/30">✦</div>
+          <p className="text-lg text-muted-foreground mb-6">
+            Henüz kurs oluşturmadın
+          </p>
+          <Link
+            href="/instructor/courses/new"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground px-6 py-2.5 text-sm font-medium shadow-soft transition-all hover:shadow-soft-lg hover:translate-y-[-1px]"
+          >
+            İlk Kursu Oluştur
+          </Link>
+        </div>
       ) : (
-        <Card>
-          <CardHeader>
-            <CardTitle>Kursların</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Kurs</TableHead>
-                  <TableHead>Ders Sayısı</TableHead>
-                  <TableHead>Öğrenci</TableHead>
-                  <TableHead>Durum</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+        <div className="glass rounded-2xl border border-border/50 p-6 shadow-soft">
+          <h2 className="text-lg font-bold mb-4">Kursların</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border/50">
+                  <th className="text-left font-medium text-muted-foreground py-3 px-3">Kurs</th>
+                  <th className="text-left font-medium text-muted-foreground py-3 px-3">Ders Sayısı</th>
+                  <th className="text-left font-medium text-muted-foreground py-3 px-3">Öğrenci</th>
+                  <th className="text-left font-medium text-muted-foreground py-3 px-3">Durum</th>
+                </tr>
+              </thead>
+              <tbody>
                 {courses.map((course) => (
-                  <TableRow key={course.id}>
-                    <TableCell className="font-medium">
-                      {course.title}
-                    </TableCell>
-                    <TableCell>{course._count.lessons}</TableCell>
-                    <TableCell>
-                      {course._count.enrollments}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          course.published ? "default" : "secondary"
-                        }
-                      >
+                  <tr key={course.id} className="border-b border-border/25 hover:bg-accent/30 transition-colors">
+                    <td className="font-medium py-3 px-3">{course.title}</td>
+                    <td className="py-3 px-3">{course._count.lessons}</td>
+                    <td className="py-3 px-3">{course._count.enrollments}</td>
+                    <td className="py-3 px-3">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+                        course.published
+                          ? "bg-primary/10 text-primary border-primary/20"
+                          : "bg-muted text-muted-foreground border-border"
+                      }`}>
                         {course.published ? "Yayında" : "Taslak"}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
+                      </span>
+                    </td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+              </tbody>
+            </table>
+          </div>
+        </div>
       )}
     </div>
   );

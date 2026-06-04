@@ -2,16 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import { toast } from "sonner";
 
 export default function ProfilePage() {
@@ -91,102 +81,125 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-12">
-        <p>Yükleniyor...</p>
+      <div className="max-w-2xl mx-auto px-4 py-16">
+        <div className="flex items-center justify-center py-20">
+          <span className="w-6 h-6 rounded-full border-2 border-primary/30 border-t-primary animate-spin" />
+        </div>
       </div>
     );
   }
 
+  const inputClass = "flex h-10 w-full rounded-xl border border-input bg-background px-4 py-2 text-sm shadow-soft transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50 disabled:cursor-not-allowed";
+
   return (
-    <div className="max-w-2xl mx-auto px-4 py-12 space-y-8">
-      <h1 className="text-3xl font-bold">Profil</h1>
+    <div className="max-w-2xl mx-auto px-4 py-16 space-y-8">
+      <h1 className="text-3xl font-bold">
+        <span className="gradient-text">Profil</span>
+      </h1>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Profili Düzenle</CardTitle>
-          <CardDescription>
+      <div className="glass rounded-2xl border border-border/50 p-6 shadow-soft space-y-6">
+        <div>
+          <h2 className="text-lg font-bold">Profili Düzenle</h2>
+          <p className="text-sm text-muted-foreground">
             Adını ve iletişim bilgilerini güncelle
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleProfileSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="name">Ad Soyad</Label>
-              <Input
-                id="name"
-                name="name"
-                defaultValue={user.name ?? ""}
-                required
-              />
-            </div>
+          </p>
+        </div>
+        <form onSubmit={handleProfileSubmit} className="space-y-5">
+          <div className="space-y-2">
+            <label htmlFor="name" className="text-sm font-medium">Ad Soyad</label>
+            <input
+              id="name"
+              name="name"
+              defaultValue={user.name ?? ""}
+              required
+              className={inputClass}
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="email" className="text-sm font-medium">E-posta</label>
+            <input
+              id="email"
+              value={user.email}
+              disabled
+              className={`${inputClass} bg-muted/50`}
+            />
+            <p className="text-xs text-muted-foreground">
+              E-posta adresi değiştirilemez.
+            </p>
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground px-6 py-2.5 text-sm font-medium shadow-soft transition-all hover:shadow-soft-lg hover:translate-y-[-1px] disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <span className="inline-flex items-center gap-2">
+                <span className="w-4 h-4 rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground animate-spin" />
+                Kaydediliyor...
+              </span>
+            ) : (
+              "Değişiklikleri Kaydet"
+            )}
+          </button>
+        </form>
+      </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email">E-posta</Label>
-              <Input
-                id="email"
-                value={user.email}
-                disabled
-                className="bg-muted"
-              />
-              <p className="text-xs text-muted-foreground">
-                E-posta adresi değiştirilemez.
-              </p>
-            </div>
-
-            <Button type="submit" disabled={loading}>
-              {loading ? "Kaydediliyor..." : "Değişiklikleri Kaydet"}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Şifre Değiştir</CardTitle>
-          <CardDescription>
+      <div className="glass rounded-2xl border border-border/50 p-6 shadow-soft space-y-6">
+        <div>
+          <h2 className="text-lg font-bold">Şifre Değiştir</h2>
+          <p className="text-sm text-muted-foreground">
             Hesap güvenliğin için şifreni düzenli olarak değiştir
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handlePasswordSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="currentPassword">Mevcut Şifre</Label>
-              <Input
-                id="currentPassword"
-                name="currentPassword"
-                type="password"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="newPassword">Yeni Şifre</Label>
-              <Input
-                id="newPassword"
-                name="newPassword"
-                type="password"
-                required
-                minLength={6}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Yeni Şifre (Tekrar)</Label>
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                required
-                minLength={6}
-              />
-            </div>
-
-            <Button type="submit" disabled={passwordLoading}>
-              {passwordLoading ? "Değiştiriliyor..." : "Şifreyi Değiştir"}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+          </p>
+        </div>
+        <form onSubmit={handlePasswordSubmit} className="space-y-5">
+          <div className="space-y-2">
+            <label htmlFor="currentPassword" className="text-sm font-medium">Mevcut Şifre</label>
+            <input
+              id="currentPassword"
+              name="currentPassword"
+              type="password"
+              required
+              className={inputClass}
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="newPassword" className="text-sm font-medium">Yeni Şifre</label>
+            <input
+              id="newPassword"
+              name="newPassword"
+              type="password"
+              required
+              minLength={6}
+              className={inputClass}
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="confirmPassword" className="text-sm font-medium">Yeni Şifre (Tekrar)</label>
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              required
+              minLength={6}
+              className={inputClass}
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={passwordLoading}
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-input bg-background px-6 py-2.5 text-sm font-medium shadow-soft transition-all hover:shadow-soft-lg hover:translate-y-[-1px] disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {passwordLoading ? (
+              <span className="inline-flex items-center gap-2">
+                <span className="w-4 h-4 rounded-full border-2 border-primary/30 border-t-primary animate-spin" />
+                Değiştiriliyor...
+              </span>
+            ) : (
+              "Şifreyi Değiştir"
+            )}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

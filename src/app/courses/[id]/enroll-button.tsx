@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { enrollInCourse } from "./actions";
 
@@ -20,12 +19,19 @@ export function EnrollButton({ courseId }: { courseId: string }) {
   }
 
   return (
-    <Button
-      className="w-full"
+    <button
       onClick={handleEnroll}
       disabled={loading}
+      className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground px-6 py-2.5 text-sm font-medium shadow-soft transition-all hover:shadow-soft-lg hover:translate-y-[-1px] disabled:opacity-50 disabled:cursor-not-allowed"
     >
-      {loading ? "Kaydediliyor..." : "Kursa Kaydol"}
-    </Button>
+      {loading ? (
+        <span className="inline-flex items-center gap-2">
+          <span className="w-4 h-4 rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground animate-spin" />
+          Kaydediliyor...
+        </span>
+      ) : (
+        "Kursa Kaydol"
+      )}
+    </button>
   );
 }

@@ -24,12 +24,19 @@ export default async function EditCoursePage({
 
   if (!course) notFound();
   if (course.instructorId !== session.user.id && session.user.role !== "ADMIN") {
-    return <div className="p-8 text-center">Bu kursu düzenleme yetkiniz yok.</div>;
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-16 text-center">
+        <div className="text-5xl mb-4 text-muted-foreground/30">✦</div>
+        <p className="text-lg text-muted-foreground">Bu kursu düzenleme yetkiniz yok.</p>
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-8">Kursu Düzenle: {course.title}</h1>
+    <div className="max-w-4xl mx-auto px-4 py-16">
+      <h1 className="text-3xl font-bold mb-10">
+        Kursu Düzenle: <span className="gradient-text">{course.title}</span>
+      </h1>
 
       <div className="space-y-10">
         <EditCourseForm course={course} />

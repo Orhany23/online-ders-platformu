@@ -2,11 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "sonner";
 
 export default function NewCoursePage() {
@@ -42,73 +37,87 @@ export default function NewCoursePage() {
     router.refresh();
   }
 
+  const inputClass = "flex h-10 w-full rounded-xl border border-input bg-background px-4 py-2 text-sm shadow-soft transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring";
+  const btnPrimary = "inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground px-6 py-2.5 text-sm font-medium shadow-soft transition-all hover:shadow-soft-lg hover:translate-y-[-1px] disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]";
+  const btnOutline = "inline-flex items-center justify-center gap-2 rounded-xl border border-input bg-background px-6 py-2.5 text-sm font-medium shadow-soft transition-all hover:shadow-soft-lg hover:translate-y-[-1px] active:scale-[0.98]";
+
   return (
-    <div className="max-w-2xl mx-auto px-4 py-12">
-      <Card>
-        <CardHeader>
-          <CardTitle>Yeni Kurs Oluştur</CardTitle>
-          <CardDescription>
+    <div className="max-w-2xl mx-auto px-4 py-16">
+      <div className="glass rounded-2xl border border-border/50 p-8 shadow-soft-lg">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold">Yeni Kurs Oluştur</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             Kurs bilgilerini gir ve öğrencilerle paylaşmaya başla
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="title">Kurs Başlığı</Label>
-              <Input
-                id="title"
-                name="title"
-                placeholder="Örn: Python ile Programlamaya Giriş"
-                required
-              />
-            </div>
+          </p>
+        </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="description">Açıklama</Label>
-              <Textarea
-                id="description"
-                name="description"
-                placeholder="Kurs içeriğini kısaca anlat..."
-                rows={4}
-                required
-              />
-            </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <label htmlFor="title" className="text-sm font-medium">Kurs Başlığı</label>
+            <input
+              id="title"
+              name="title"
+              placeholder="Örn: Python ile Programlamaya Giriş"
+              required
+              className={inputClass}
+            />
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="price">Fiyat (₺)</Label>
-              <Input
-                id="price"
-                name="price"
-                type="number"
-                min="0"
-                step="0.01"
-                defaultValue="0"
-              />
-              <p className="text-xs text-muted-foreground">
-                0 bırakırsanız kurs ücretsiz olur
-              </p>
-            </div>
+          <div className="space-y-2">
+            <label htmlFor="description" className="text-sm font-medium">Açıklama</label>
+            <textarea
+              id="description"
+              name="description"
+              placeholder="Kurs içeriğini kısaca anlat..."
+              rows={4}
+              required
+              className="flex min-h-[100px] w-full rounded-xl border border-input bg-background px-4 py-3 text-sm shadow-soft transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-y"
+            />
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="image">Kapak Görseli (URL)</Label>
-              <Input
-                id="image"
-                name="image"
-                placeholder="https://ornek.com/gorsel.jpg"
-              />
-            </div>
+          <div className="space-y-2">
+            <label htmlFor="price" className="text-sm font-medium">Fiyat (&#x20BA;)</label>
+            <input
+              id="price"
+              name="price"
+              type="number"
+              min="0"
+              step="0.01"
+              defaultValue="0"
+              className={inputClass}
+            />
+            <p className="text-xs text-muted-foreground">
+              0 bırakırsanız kurs ücretsiz olur
+            </p>
+          </div>
 
-            <div className="flex gap-4">
-              <Button type="submit" disabled={loading}>
-                {loading ? "Oluşturuluyor..." : "Kursu Oluştur"}
-              </Button>
-              <Button type="button" variant="outline" onClick={() => router.back()}>
-                İptal
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+          <div className="space-y-2">
+            <label htmlFor="image" className="text-sm font-medium">Kapak Görseli (URL)</label>
+            <input
+              id="image"
+              name="image"
+              placeholder="https://ornek.com/gorsel.jpg"
+              className={inputClass}
+            />
+          </div>
+
+          <div className="flex gap-4 pt-2">
+            <button type="submit" disabled={loading} className={btnPrimary}>
+              {loading ? (
+                <span className="inline-flex items-center gap-2">
+                  <span className="w-4 h-4 rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground animate-spin" />
+                  Oluşturuluyor...
+                </span>
+              ) : (
+                "Kursu Oluştur"
+              )}
+            </button>
+            <button type="button" onClick={() => router.back()} className={btnOutline}>
+              İptal
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
