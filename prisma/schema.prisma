@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String?
+  email         String         @unique
+  password      String?
+  image         String?
+  role          String         @default("STUDENT")
+  courses       Course[]       @relation("Instructor")
+  liveSessions  LiveSession[]  @relation("LiveInstructor")
+  enrollments   Enrollment[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  accounts Account[]
+  sessions Session[]
+}
+
+model Course {
+  id           String         @id @default(cuid())
+  title        String
+  description  String
+  image        String?
+  price        Float          @default(0)
+  published    Boolean        @default(false)
+  instructor   User           @relation("Instructor", fields: [instructorId], references: [id])
+  instructorId String
+  lessons      Lesson[]
+  liveSessions LiveSession[]
+  enrollments  Enrollment[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  videoUrl    String?
+  duration    Int?
+  order       Int      @default(0)
+  course      Course   @relation(fields: [courseId], references: [id])
+  courseId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model LiveSession {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  date         DateTime
+  meetingLink  String?
+  course       Course   @relation(fields: [courseId], references: [id])
+  courseId     String
+  instructor   User     @relation("LiveInstructor", fields: [instructorId], references: [id])
+  instructorId String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Enrollment {
+  id        String           @id @default(cuid())
+  user      User             @relation(fields: [userId], references: [id])
+  userId    String
+  course    Course           @relation(fields: [courseId], references: [id])
+  courseId  String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, courseId])
+}
+
+model LessonProgress {
+  id        String   @id @default(cuid())
+  userId    String
+  lessonId  String
+  courseId  String
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, lessonId])
+  @@index([userId, courseId])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
