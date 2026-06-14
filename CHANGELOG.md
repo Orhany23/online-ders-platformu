@@ -4,6 +4,15 @@ Her değişiklik burada kaydedilir. En yeni en üstte. Geri dönmek için: GitHu
 
 ---
 
+## [v4] — 14 Haziran 2026 — Şifre sıfırlama + yönetici linki
+Ne değişti:
+- Admin panelinde her kullanıcı için "Şifre sıfırla" butonu: yönetici yeni şifre belirler (kendi dahil). E-posta altyapısı gerekmez.
+- Login sayfasına "Şifremi unuttum?" linki + /forgot-password sayfası (şu an admin'e yönlendirir).
+- Footer'a sade "Yönetici" linki (/admin) eklendi.
+Dosyalar: src/app/api/admin/users/[id]/password/route.ts, src/app/(dashboard)/admin/users-table.tsx, src/app/(auth)/login/page.tsx, src/app/(auth)/forgot-password/page.tsx, src/components/footer.tsx
+Not: v1-v3'ten bağımsız (veritabanı değişikliği gerektirmez), ayrı da uygulanabilir.
+Commit: bu commit
+
 ## [v3] — 14 Haziran 2026 — Eşleştirmenin iki tarafa yansıması
 Ne değişti:
 - Öğrenci panelinde (/dashboard) "Öğretmenim / Koçum" bölümü: öğrenci kendisine atanan öğretmen(ler)i, branşı ve türüyle görür.

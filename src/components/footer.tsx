@@ -143,6 +143,9 @@ export function Footer() {
             <Link href="/" className="hover:text-foreground transition-colors">
               Kullanım Koşulları
             </Link>
+            <Link href="/admin" className="hover:text-foreground transition-colors opacity-70">
+              Yönetici
+            </Link>
           </div>
         </div>
       </div>

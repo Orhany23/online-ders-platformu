@@ -53,8 +53,30 @@ function RoleCell({ user }: { user: User }) {
     }
   };
 
+  const resetPassword = async () => {
+    const pw = window.prompt(
+      `${user.name ?? user.email} için yeni şifre (en az 6 karakter):`
+    );
+    if (!pw) return;
+    if (pw.length < 6) {
+      toast.error("Şifre en az 6 karakter olmalı.");
+      return;
+    }
+    try {
+      const res = await fetch(`/api/admin/users/${user.id}/password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: pw }),
+      });
+      if (!res.ok) throw new Error();
+      toast.success("Şifre güncellendi. Yeni şifreyi kullanıcıya ilet.");
+    } catch {
+      toast.error("Şifre sıfırlanamadı.");
+    }
+  };
+
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 flex-wrap">
       <span
         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${roleStyles[role] ?? roleStyles.STUDENT}`}
       >
@@ -71,6 +93,12 @@ function RoleCell({ user }: { user: User }) {
         <option value="INSTRUCTOR">Eğitmen</option>
         <option value="ADMIN">Admin</option>
       </select>
+      <button
+        onClick={resetPassword}
+        className="text-xs rounded-md border border-border px-2 py-1 text-muted-foreground hover:border-primary/40 hover:text-primary"
+      >
+        Şifre sıfırla
+      </button>
     </div>
   );
 }
