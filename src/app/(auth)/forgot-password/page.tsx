@@ -21,10 +21,10 @@ export default function ForgotPasswordPage() {
         </div>
 
         <a
-          href="mailto:destek@fiberan.com?subject=Şifre%20sıfırlama%20talebi"
+          href="mailto:yasliOrhan26@gmail.com?subject=Şifre%20sıfırlama%20talebi"
           className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground px-6 py-2.5 text-sm font-medium shadow-soft transition-all hover:shadow-soft-lg hover:translate-y-[-1px]"
         >
-          destek@fiberan.com adresine yaz
+          yasliOrhan26@gmail.com adresine yaz
         </a>
 
         <p className="text-center text-sm text-muted-foreground mt-6">
