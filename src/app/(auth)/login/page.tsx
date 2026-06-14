@@ -1,25 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
 
-function getCallbackUrl() {
-  if (typeof window === "undefined") return "/";
-  const params = new URLSearchParams(window.location.search);
-  return params.get("callbackUrl") ?? "/";
-}
-
 export default function LoginPage() {
   const router = useRouter();
-  const [callbackUrl, setCallbackUrl] = useState("/");
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setCallbackUrl(getCallbackUrl());
-  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -41,7 +30,7 @@ export default function LoginPage() {
       return;
     }
 
-    router.push(callbackUrl);
+    router.push("/");
     router.refresh();
   }
 

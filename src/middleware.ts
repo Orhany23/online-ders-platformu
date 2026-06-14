@@ -16,9 +16,7 @@ export default auth((req) => {
   }
 
   if (!isPublic && !isLoggedIn) {
-    const loginUrl = new URL("/login", req.url);
-    loginUrl.searchParams.set("callbackUrl", pathname);
-    return NextResponse.redirect(loginUrl);
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
   if (pathname.startsWith("/admin") && role !== "ADMIN") {
