@@ -1,16 +1,25 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
 
-function LoginForm() {
+function getCallbackUrl() {
+  if (typeof window === "undefined") return "/";
+  const params = new URLSearchParams(window.location.search);
+  return params.get("callbackUrl") ?? "/";
+}
+
+export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/";
+  const [callbackUrl, setCallbackUrl] = useState("/");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setCallbackUrl(getCallbackUrl());
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -110,13 +119,5 @@ function LoginForm() {
         </p>
       </div>
     </div>
-  );
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense fallback={<div className="min-h-[80vh] flex items-center justify-center">Yükleniyor...</div>}>
-      <LoginForm />
-    </Suspense>
   );
 }
