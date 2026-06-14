@@ -60,6 +60,9 @@ export async function Navbar() {
                       <Link href="/instructor/courses">✦ Kurslarım</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
+                      <Link href="/instructor/students">✦ Öğrencilerim</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
                       <Link href="/instructor/analytics">✦ Analizler</Link>
                     </DropdownMenuItem>
                   </>

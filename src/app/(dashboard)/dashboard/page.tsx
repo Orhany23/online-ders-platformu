@@ -53,6 +53,15 @@ export default async function DashboardPage() {
     }
   }
 
+  const myTeachers = await prisma.assignment.findMany({
+    where: { studentId: session.user.id },
+    select: {
+      id: true,
+      teacher: { select: { name: true, email: true, branch: true, teacherKind: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-16">
       <div className="mb-12">
@@ -63,6 +72,34 @@ export default async function DashboardPage() {
           Merhaba, {session.user.name ?? "Öğrenci"}
         </p>
       </div>
+
+      {myTeachers.length > 0 && (
+        <section className="mb-12">
+          <h2 className="text-xl font-bold mb-6">Öğretmenim / Koçum</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {myTeachers.map((a) => (
+              <div key={a.id} className="glass-card rounded-2xl p-5 shadow-soft">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-semibold">
+                    {(a.teacher.name ?? "?").charAt(0).toUpperCase()}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-semibold truncate">{a.teacher.name ?? "Öğretmen"}</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {a.teacher.branch || "Branş belirtilmedi"}
+                      {a.teacher.teacherKind === "KOCLUK"
+                        ? " · Koçluk"
+                        : a.teacher.teacherKind === "DERS"
+                        ? " · Ders"
+                        : ""}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="mb-12">
         <h2 className="text-xl font-bold mb-6">Kurslarım</h2>

@@ -4,6 +4,14 @@ Her değişiklik burada kaydedilir. En yeni en üstte. Geri dönmek için: GitHu
 
 ---
 
+## [v3] — 14 Haziran 2026 — Eşleştirmenin iki tarafa yansıması
+Ne değişti:
+- Öğrenci panelinde (/dashboard) "Öğretmenim / Koçum" bölümü: öğrenci kendisine atanan öğretmen(ler)i, branşı ve türüyle görür.
+- Öğretmen panelinde yeni "Öğrencilerim" sayfası (/instructor/students): öğretmen kendisine atanan öğrencileri görür. Navbar'a link eklendi.
+Dosyalar: src/app/(dashboard)/dashboard/page.tsx, src/app/(dashboard)/instructor/students/page.tsx, src/components/navbar.tsx
+Not: v3, v2'deki eşleştirme modeline bağlıdır; v1+v2 deploy olduktan SONRA uygulanmalı.
+Commit: bu commit
+
 ## [v2] — 14 Haziran 2026 — Öğrenci–öğretmen eşleştirme altyapısı
 Ne değişti:
 - Öğretmene branş + tür (Ders / Koçluk) alanları eklendi.
