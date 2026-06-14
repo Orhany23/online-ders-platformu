@@ -20,8 +20,27 @@ model User {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 
+  branch             String?
+  teacherKind        String?        // "DERS" | "KOCLUK"
+  teacherAssignments Assignment[]   @relation("TeacherAssignments")
+  studentAssignments Assignment[]   @relation("StudentAssignments")
+
   accounts Account[]
   sessions Session[]
+}
+
+model Assignment {
+  id        String   @id @default(cuid())
+  teacherId String
+  teacher   User     @relation("TeacherAssignments", fields: [teacherId], references: [id], onDelete: Cascade)
+  studentId String
+  student   User     @relation("StudentAssignments", fields: [studentId], references: [id], onDelete: Cascade)
+  note      String?
+  createdAt DateTime @default(now())
+
+  @@unique([teacherId, studentId])
+  @@index([teacherId])
+  @@index([studentId])
 }
 
 model Course {
